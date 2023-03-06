@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
 import com.example.SpringHello.repositories.AlumnoRepository;
-import java.util.AbstractList;
 import java.util.ArrayList;
 
 /**
@@ -41,32 +40,25 @@ public class AlumnosController {
         }
     }
 
-    @GetMapping("/suspensos/ad")
-    public List<Alumno> getByModuloAd() {
+    @GetMapping("/suspensos/{modulo}")
+    public List<Alumno> getByModulo(@PathVariable String modulo) {
 
         List<Alumno> alumnosSuspensos = new ArrayList();
         List<Alumno> alumnos = repo.findAll();
-        for(Alumno alumno: alumnos){
+        if(modulo.equals("ad")){
+            for(Alumno alumno: alumnos){
             if(alumno.getAd()<5.0)
                 alumnosSuspensos.add(alumno);
-        }
-        
-        return alumnosSuspensos;
-    }
-    
-    @GetMapping("/suspensos/di")
-    public List<Alumno> getByModuloDi() {
-        
-        List<Alumno> alumnosSuspensos = new ArrayList();
-        List<Alumno> alumnos = repo.findAll();
-        for(Alumno alumno: alumnos){
+            }
+        }else if(modulo.equals("di")){
+            for(Alumno alumno: alumnos){
             if(alumno.getDi()<5.0)
                 alumnosSuspensos.add(alumno);
+            }
         }
         
         return alumnosSuspensos;
-    }
-    
+    } 
 
     @PostMapping
     public ResponseEntity<Alumno> post(@RequestBody Alumno input) {
@@ -81,9 +73,4 @@ public class AlumnosController {
         return new ResponseEntity<>(input, HttpStatus.OK);
     }
     
-//    @DeleteMapping("/{isbn}")
-//    public ResponseEntity<?> delete(@PathVariable String isbn) {
-//        repo.deleteById(isbn);
-//        return new ResponseEntity<>("Borrado con exito", HttpStatus.OK);
-//    }
 }
